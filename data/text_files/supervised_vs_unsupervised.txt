@@ -1,0 +1,13 @@
+
+Supervised learning uses labeled datasets to train models, enabling tasks such as 
+classification, regression, and prediction. Common algorithms include Logistic Regression, 
+Support Vector Machines, Random Forest, and Gradient Boosting.
+
+Unsupervised learning deals with unlabeled data and aims to uncover hidden patterns.
+Key techniques include clustering (K-Means, DBSCAN), dimensionality reduction (PCA, t-SNE),
+and association rule mining (Apriori, FP-Growth). The selection of approach depends on 
+data availability and the problem type.
+
+In modern machine learning systems, semi-supervised learning and self-supervised learning
+bridge the gap by leveraging a small amount of labeled data with large volumes of unlabelled data.
+    

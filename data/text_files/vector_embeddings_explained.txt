@@ -1,0 +1,13 @@
+
+Vector embeddings convert text into high-dimensional numerical representations that reflect
+semantic meaning. They allow similarity search even when keywords differ, making them core
+to Retrieval Augmented Generation (RAG) systems.
+
+Embedding models such as BERT, Sentence Transformers, and OpenAI's text-embedding models
+produce dense vector outputs. These vectors are stored in vector databases like FAISS,
+Pinecone, Milvus, or Weaviate.
+
+During retrieval, similarity metrics such as cosine similarity or dot product help identify
+the most relevant stored chunks. High-quality chunking, metadata tagging, and prompt design
+greatly improve retrieval accuracy.
+    

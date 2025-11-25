@@ -1,0 +1,9 @@
+
+Employees are entitled to 18 annual leaves, 12 casual leaves, and 10 sick leaves per year.
+Annual leaves can be carried forward up to a maximum of 30 days. Casual and sick leaves
+cannot be carried forward.
+
+Unapproved leaves lead to salary deductions as per the HR compliance rules. Employees
+must apply for leave at least 2 days in advance except in medical emergencies. A medical
+certificate is required for sick leave exceeding 3 consecutive days.
+    

@@ -1,0 +1,11 @@
+
+Subscriptions renew automatically unless canceled before the next billing cycle. Auto-renewal
+can be turned off from the Billing Settings page. Once disabled, users retain access until the
+end of the current billing period.
+
+Refunds for auto-renewals are provided only if the request is submitted within 48 hours.
+Proration is not supported. Failed transactions may temporarily restrict access until payment
+is completed.
+
+Invoices are available for download under Account → Billing → Invoices.
+    
