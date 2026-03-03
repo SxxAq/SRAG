@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: srag-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/chat_history.db
+      - SRAG_EMBEDDING_MODEL=all-MiniLM-L6-v2
+      - SRAG_LLM_BACKEND=gemini
+      - SRAG_LLM_MODEL=gemini-2.5-flash
+      - SRAG_VECTOR_DB_PATH=/app/data/vector_store
+      - SRAG_CHUNK_SIZE=1000
+      - SRAG_CHUNK_OVERLAP=200
+      - SRAG_TOP_K=5
+      - PYTHON_UNBUFFERED=1
+    volumes:
+      - ./data:/app/data
+      - ./srag:/app/srag
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - srag-network
+    depends_on:
+      - db
+
+  # React Frontend (served via Nginx)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: srag-frontend
+    ports:
+      - "80:80"
+      - "3000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - srag-network
+    depends_on:
+      - backend
+
+  # SQLite Database (for chat history)
+  # Using volumes to persist data
+  db:
+    image: busybox:latest
+    container_name: srag-db
+    volumes:
+      - db-data:/data
+    networks:
+      - srag-network
+    command: sh -c "tail -f /dev/null"  # Keep container running
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  srag-network:
+    driver: bridge
