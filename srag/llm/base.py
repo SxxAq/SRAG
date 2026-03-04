@@ -78,18 +78,30 @@ class GeminiBackend(LLMBackendBase):
         super().__init__(model_name, api_key)
         
         try:
-            from google import genai
-            self.genai = genai
-            
             # Use provided key or get from environment
             key = api_key or os.getenv("GEMINI_API_KEY")
             if not key:
                 raise LLMException("GEMINI_API_KEY not provided and not found in environment")
-            
-            self.client = genai.Client(api_key=key)
-            logger.info(f"Gemini backend initialized with model: {model_name}")
+
+            # Prefer the newer google-genai SDK when available, but keep
+            # compatibility with google-generativeai used by older dependency sets.
+            try:
+                from google import genai
+
+                self._sdk = "google-genai"
+                self.client = genai.Client(api_key=key)
+                logger.info(f"Gemini backend initialized with {self._sdk}: {model_name}")
+            except ImportError:
+                import google.generativeai as genai_legacy
+
+                self._sdk = "google-generativeai"
+                genai_legacy.configure(api_key=key)
+                self.client = genai_legacy.GenerativeModel(model_name)
+                logger.info(f"Gemini backend initialized with {self._sdk}: {model_name}")
         except ImportError as e:
-            raise LLMException("google-genai library not installed") from e
+            raise LLMException(
+                "Neither google-genai nor google-generativeai is installed"
+            ) from e
         except Exception as e:
             logger.error(f"Error initializing Gemini: {e}")
             raise LLMException(f"Failed to initialize Gemini: {e}") from e
@@ -109,11 +121,16 @@ class GeminiBackend(LLMBackendBase):
         """
         try:
             logger.info(f"Generating response with Gemini ({self.model_name})")
-            response = self.client.models.generate_content(
-                model=self.model_name,
-                contents=prompt
-            )
-            return response.text
+
+            if self._sdk == "google-genai":
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt
+                )
+            else:
+                response = self.client.generate_content(prompt)
+
+            return getattr(response, "text", str(response))
         except Exception as e:
             logger.error(f"Error generating response: {e}")
             raise LLMException(f"Failed to generate response: {e}") from e

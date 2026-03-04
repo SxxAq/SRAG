@@ -110,7 +110,7 @@ def create_document(
         file_path=file_path,
         size_bytes=size_bytes,
         num_chunks=num_chunks,
-        metadata=metadata or {},
+        doc_metadata=metadata or {},
         upload_time=datetime.utcnow(),
     )
     

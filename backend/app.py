@@ -148,9 +148,14 @@ async def startup_event():
     global rag_pipeline
     
     logger.info("Starting up SRAG API...")
-    init_db()
-    rag_pipeline = RAGPipeline()
-    logger.info("SRAG API ready!")
+    try:
+        init_db()
+        rag_pipeline = RAGPipeline()
+        logger.info("SRAG API ready!")
+    except Exception as e:
+        logger.error(f"Error during startup: {e}", exc_info=True)
+        # Don't fail startup, allow API to run in degraded mode
+        logger.warning("SRAG API starting in degraded mode")
 
 
 # ============================================================================
@@ -374,7 +379,7 @@ async def upload_document(
             size_bytes=db_doc.size_bytes,
             upload_time=db_doc.upload_time,
             num_chunks=db_doc.num_chunks,
-            metadata=db_doc.metadata,
+            metadata=db_doc.doc_metadata or {},
         )
         
     except HTTPException:
@@ -403,7 +408,7 @@ async def list_documents(
                 size_bytes=doc.size_bytes,
                 upload_time=doc.upload_time,
                 num_chunks=doc.num_chunks,
-                metadata=doc.metadata,
+                metadata=doc.doc_metadata or {},
             )
             for doc in documents
         ]

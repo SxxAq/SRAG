@@ -60,7 +60,7 @@ class DocumentInfo(Base):
     file_path = Column(String, nullable=False, unique=True)
     size_bytes = Column(Integer, nullable=False)
     num_chunks = Column(Integer, default=0)
-    metadata = Column(JSON, nullable=True)
+    doc_metadata = Column("metadata", JSON, nullable=True)
     upload_time = Column(DateTime, default=datetime.utcnow, index=True)
     last_accessed = Column(DateTime, nullable=True)
 

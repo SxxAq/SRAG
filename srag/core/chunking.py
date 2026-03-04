@@ -3,7 +3,12 @@ Document chunking utilities for splitting text into manageable pieces.
 """
 
 from typing import List, Any
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+try:
+    # Newer LangChain splitters package
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+except ImportError:
+    # Backward compatibility with older langchain releases
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from srag.logging_config import logger
 

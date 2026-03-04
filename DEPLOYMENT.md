@@ -160,6 +160,13 @@ rm -rf data/chat_history.db
 docker-compose restart backend
 ```
 
+**Docker build fails with `Temporary failure in name resolution`:**
+```bash
+# Rebuild backend with host networking for build-time DNS
+docker-compose build --no-cache backend
+```
+If it still fails, set Docker daemon DNS (for example `8.8.8.8`, `1.1.1.1`) and restart Docker.
+
 ---
 
 ## 🏗️ Architecture

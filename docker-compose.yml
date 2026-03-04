@@ -5,6 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     container_name: srag-backend
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     ports:
       - "8000:8000"
     environment:
@@ -23,11 +26,11 @@ services:
     expose:
       - "8000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/health', timeout=5)"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 120s
     networks:
       - srag-network
     depends_on:
@@ -39,6 +42,9 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     container_name: srag-frontend
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     ports:
       - "80:80"
       - "3000:80"
