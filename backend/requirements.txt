@@ -1,15 +1,34 @@
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-pydantic==2.5.0
-python-dotenv==1.0.0
-sqlalchemy==2.0.23
-python-multipart==0.0.6
+# API & Web Framework
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
 
-# Include all core SRAG dependencies
-langchain==0.1.0
-langchain-community==0.0.10
-sentence-transformers==3.0.1
-torch==2.2.2+cpu
-torchvision==0.17.2+cpu
-chromadb==0.4.18
-google-generativeai==0.3.0
+# Data & Configuration
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+sqlalchemy>=2.0.23
+
+# Core RAG & LLM
+langchain>=1.0.8
+langchain-community>=0.4.1
+langchain-core>=1.1.0
+
+# Embeddings & Vector DB
+sentence-transformers>=5.1.2
+chromadb>=1.3.5
+faiss-cpu>=1.13.0
+
+# Document Processing
+pymupdf>=1.26.6
+pypdf>=6.4.0
+
+# LLM Providers
+google-genai>=1.56.0
+
+# PyTorch (CPU only - pulled from extra index)
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Utilities
+tqdm>=4.67.1
+requests>=2.31.0

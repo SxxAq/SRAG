@@ -3,12 +3,20 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Set pip environment variables for better reliability
+ENV PIP_NO_CACHE_DIR=1 \
+    PIP_DEFAULT_TIMEOUT=300 \
+    PIP_RETRIES=5 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
 # Copy requirements and config first (for layer caching)
 COPY backend/requirements.txt requirements.txt
 COPY pyproject.toml pyproject.toml
 
 # Install Python dependencies (force CPU-only PyTorch wheels to avoid huge CUDA downloads)
-RUN pip install --no-cache-dir --retries 10 --timeout 120 \
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --retries 5 --timeout 300 \
     --extra-index-url https://download.pytorch.org/whl/cpu \
     -r requirements.txt
 
@@ -19,10 +27,6 @@ COPY data/ data/
 
 # Create uploads directory
 RUN mkdir -p data/uploads
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
